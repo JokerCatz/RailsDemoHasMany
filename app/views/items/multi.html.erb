@@ -31,15 +31,12 @@
 <script>
 function bind_item(target){
   target.find('.add').click(function(){
-    console.log('add')
     var temp = $('.template').clone().removeClass('template');
     temp.find("input , select").each(function(){
       $(this).attr('name' , $(this).attr('data-name'));
     });
     $('ol').append(bind_item(temp));
   }).siblings('.del').click(function(){
-    console.log('del' + $('ol li').length);
-    
     if($('ol li').length > 2){
       $(this).parent('li').remove();
     }

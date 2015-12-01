@@ -49,7 +49,7 @@ class ItemsController < ApplicationController
     #取出所有關連id
     ids = (params[:ic_old] || {}).keys.map{|i|i.to_i}
 
-    #將會刪除11，語意：排除送出的id之外的所有隸屬item的都刪除
+    #語意：排除送出的id之外的所有隸屬item的都刪除
     ItemChild.where("item_id = #{@item.id} AND id NOT IN (#{ids.join(',')})").delete_all
 
     #更新舊的資料
@@ -57,16 +57,15 @@ class ItemsController < ApplicationController
       params[:ic_old].each_pair do |id , data|
         ic = ItemChild.where(:item_id => @item.id , :id => id).first
         if ic
-          #這邊要過 permit 或是一個一個指定都行，前述
+          #這邊要過 permit 或是一個一個指定都行
           ic.update_attributes(:name => data[:name] , :age => data[:age])
         end
       end
     end
 
-    #上面新增的code，額外新增的都再塞入
+    #額外新增的都再塞入
     if params[:ic]
       params[:ic][:name].each_index do |index|
-        #新增了13,14
         ItemChild.create(:item_id => @item.id , :name => params[:ic][:name][index] , :age => params[:ic][:age][index])
       end
     end
